@@ -10,4 +10,13 @@ function getComputerChoice() {
   }
 }
 
+function getHumanChoice() {
+  let humanChoice = prompt(
+    "Choose your weapon! Type 'rock', 'paper' or 'scissors': "
+  );
+
+  return humanChoice.toLowerCase();
+}
+
 console.log(getComputerChoice());
+console.log(getHumanChoice());
