@@ -1,6 +1,3 @@
-const humanScore = 0;
-const computerScore = 0;
-
 function getComputerChoice() {
   let random = Math.floor(Math.random() * 3);
 
@@ -25,8 +22,8 @@ function playRound(humanChoice, computerChoice) {
   let isPlayerWinner = false;
 
   if (humanChoice === computerChoice) {
-    alert("It's a tie! Play new round");
-    return;
+    alert("It's a tie! Play a new round");
+    return 0;
   }
 
   if (
@@ -35,22 +32,42 @@ function playRound(humanChoice, computerChoice) {
     (humanChoice === "scissors" && computerChoice === "paper")
   ) {
     isPlayerWinner = true;
-  }
 
-  if (isPlayerWinner) {
-    alert(
-      `You won! Your '${humanChoice}' wins computer's '${computerChoice}'. Play a new round`
-    );
-    humanScore += 1;
+    if (isPlayerWinner) {
+      alert(
+        `You won! Your '${humanChoice}' beats computer's '${computerChoice}'. Play a new round`
+      );
+      return 1;
+    }
   } else {
     alert(
-      `You lost! Computer's '${computerChoice}' wins your '${humanChoice}'. Play a new round`
+      `You lost! Computer's '${computerChoice}' beats your '${humanChoice}'. Play a new round`
     );
-    computerScore += 1;
+    return -1;
   }
 }
 
-let humanChoice = getHumanChoice();
-let computerChoice = getComputerChoice();
+function playGame() {
+  let humanScore = 0;
+  let computerScore = 0;
 
-console.log(playRound(humanChoice, computerChoice));
+  alert(
+    "Lets play a game of Rock, Paper and Scissors against computer! Start the game by pressing 'OK'"
+  );
+
+  while (humanScore < 5 && computerScore < 5) {
+    alert(`Game Score\nPlayer: ${humanScore}\nComputer: ${computerScore}`);
+
+    const humanChoice = getHumanChoice();
+    const computerChoice = getComputerChoice();
+    const result = playRound(humanChoice, computerChoice);
+
+    if (result === 1) humanScore++;
+    if (result === -1) computerScore++;
+  }
+
+  if (humanScore === 5) alert("Congratulations!! You won!");
+  if (computerScore === 5) alert("Too bad, you lost. Try again!");
+}
+
+playGame();
