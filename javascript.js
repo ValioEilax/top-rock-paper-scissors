@@ -10,19 +10,10 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  let humanChoice = prompt(
-    "Choose your weapon! Type 'rock', 'paper' or 'scissors': "
-  );
-
-  return humanChoice.toLowerCase();
-}
-
 function playRound(humanChoice, computerChoice) {
   let isPlayerWinner = false;
 
   if (humanChoice === computerChoice) {
-    alert("It's a tie! Play a new round");
     return 0;
   }
 
@@ -32,17 +23,13 @@ function playRound(humanChoice, computerChoice) {
     (humanChoice === "scissors" && computerChoice === "paper")
   ) {
     isPlayerWinner = true;
+  }
 
-    if (isPlayerWinner) {
-      alert(
-        `You won! Your '${humanChoice}' beats computer's '${computerChoice}'. Play a new round`
-      );
-      return 1;
-    }
+  if (isPlayerWinner) {
+    console.log(isPlayerWinner);
+    return 1;
   } else {
-    alert(
-      `You lost! Computer's '${computerChoice}' beats your '${humanChoice}'. Play a new round`
-    );
+    console.log(isPlayerWinner);
     return -1;
   }
 }
@@ -51,23 +38,80 @@ function playGame() {
   let humanScore = 0;
   let computerScore = 0;
 
-  alert(
-    "Lets play a game of Rock, Paper and Scissors against computer! Start the game by pressing 'OK'"
-  );
+  const div = document.querySelector("#rps");
 
-  while (humanScore < 5 && computerScore < 5) {
-    alert(`Game Score\nPlayer: ${humanScore}\nComputer: ${computerScore}`);
+  const introDiv = document.createElement("div");
+  introDiv.classList.toggle("#intro");
+  div.appendChild(introDiv);
 
-    const humanChoice = getHumanChoice();
-    const computerChoice = getComputerChoice();
-    const result = playRound(humanChoice, computerChoice);
+  const para = document.createElement("p");
+  para.textContent = "Choose your weapon against Evil Computer!";
+  introDiv.appendChild(para);
 
-    if (result === 1) humanScore++;
-    if (result === -1) computerScore++;
-  }
+  const choices = ["rock", "paper", "scissors"];
 
-  if (humanScore === 5) alert("Congratulations!! You won!");
-  if (computerScore === 5) alert("Too bad, you lost. Try again!");
+  choices.forEach((choice) => {
+    const button = document.createElement("button");
+    button.textContent = choice;
+    div.appendChild(button);
+  });
+
+  const allButtons = div.querySelectorAll("button");
+
+  const resultsDiv = document.createElement("div");
+  resultsDiv.classList.toggle("#results");
+  div.appendChild(resultsDiv);
+
+  const resultsPara = document.createElement("p");
+  resultsPara.textContent = "";
+  resultsDiv.appendChild(resultsPara);
+
+  const humanScorePara = document.createElement("p");
+  humanScorePara.textContent = `Your score is: ${humanScore}`;
+  resultsDiv.appendChild(humanScorePara);
+
+  const computerScorePara = document.createElement("p");
+  computerScorePara.textContent = `Computer score is: ${computerScore}`;
+  resultsDiv.appendChild(computerScorePara);
+
+  allButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const humanChoice = e.target.textContent.toLowerCase();
+      const computerChoice = getComputerChoice();
+      let result = playRound(humanChoice, computerChoice);
+      console.log(result);
+
+      if (result === 1 && humanScore === 4) {
+        resultsPara.textContent =
+          "Congratulations! You won the game! Play again by refreshing the page";
+        humanScore++;
+        humanScorePara.textContent = `Your score is: ${humanScore}`;
+        allButtons.forEach((button) => {
+          button.remove();
+        });
+      } else if (result === -1 && computerScore === 4) {
+        resultsPara.textContent =
+          "Unfortunately Evil Computer won. Try again by refreshing the page";
+        computerScore++;
+        computerScorePara.textContent = `Computer score: ${computerScore}`;
+        allButtons.forEach((button) => {
+          button.remove();
+        });
+      } else {
+        if (result === 1) {
+          resultsPara.textContent = `You won! Your '${humanChoice}' beats computer's '${computerChoice}'. Play a new round`;
+          humanScore++;
+          humanScorePara.textContent = `Your score is: ${humanScore}`;
+        } else if (result === -1) {
+          resultsPara.textContent = `You lost! Computer's '${computerChoice}' beats your '${humanChoice}'. Play a new round`;
+          computerScore++;
+          computerScorePara.textContent = `Computer score: ${computerScore}`;
+        } else {
+          resultsPara.textContent = `It's a tie! You both chose ${computerChoice}. Play a new round`;
+        }
+      }
+    });
+  });
 }
 
 playGame();
